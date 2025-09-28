@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('sku')->unique()->nullable();
             $table->integer('reorder_level')->default(0);
+            $table->foreignId('user_id')->constrained();
             $table->timestamps(); // created_at, updated_at
         });
     }

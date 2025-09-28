@@ -24,7 +24,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $warehouse['name'] }}</td>
-                        <td>{{ $warehouse['locations'] }}</td>
+                        <td>{{ $warehouse['location'] }}</td>
                         <td>
                             <a href="/warehouses/{{ $warehouse->id }}" class="btn btn-dash">
                                 Show</a>

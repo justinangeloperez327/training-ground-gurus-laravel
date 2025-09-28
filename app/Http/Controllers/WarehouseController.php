@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WarehouseController extends Controller
 {
@@ -37,7 +38,7 @@ class WarehouseController extends Controller
             'location' => ['required', 'string', 'max:200']
         ]);
 
-        Warehouse::create($validated);
+        Warehouse::create(['user_id' => Auth::id(),...$validated]);
 
         return redirect('warehouses')->with('success', 'Warehouse Created');
     }

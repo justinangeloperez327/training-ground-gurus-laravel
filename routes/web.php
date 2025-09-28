@@ -4,7 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Auth\AvatarController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Middleware\AdminMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,12 +22,37 @@ Route::redirect('/', 'home');
 
 // Route::view('about', 'about');
 
-Route::view('login', 'auth.login');
-Route::view('register', 'auth.register');
+Route::middleware('guest')->group(function () {
+    Route::view('login', 'auth.login');
+    Route::view('register', 'auth.register');
 
-Route::get('home', [HomeController::class, 'home']);
-Route::get('about', AboutController::class);
+    Route::post('login', LoginController::class)->name('login');
+    Route::post('register', RegisterController::class)->name('register');
 
+    Route::get('about', AboutController::class);
+    Route::get('home', [HomeController::class, 'home']);
+});
+
+Route::post('logout', LogoutController::class)->name('sign-out')->middleware('auth');
+
+Route::middleware('auth')->group(function() {
+
+    Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::post('avatar', [AvatarController::class, 'upload'])->name('avatar.upload');
+    Route::put('avatar{image}', [AvatarController::class, 'update'])->name('avatar.update');
+
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+
+    // Short method using resource
+    Route::resource('items', ItemController::class);
+    Route::resource('warehouses', WarehouseController::class);
+});
+
+Route::view('admin', 'admin')->middleware('admin');
+
+// Long method routing
 // Route::get('items', [ItemController::class, 'index']);
 // Route::get('items/create', [ItemController::class, 'create']);
 // Route::post('items', [ItemController::class, 'store']);
@@ -29,5 +61,6 @@ Route::get('about', AboutController::class);
 // Route::put('items/{item}', [ItemController::class, 'update']);
 // Route::delete('items/{item}', [ItemController::class, 'destroy']);
 
-Route::resource('items', ItemController::class);
-Route::resource('warehouses', WarehouseController::class);
+//Limit what is available on controller
+// Route::resource('warehouses', WarehouseController::class)->only(['update']);
+// Route::resource('warehouses', WarehouseController::class)->except(['index', 'create', 'edit', 'show']);

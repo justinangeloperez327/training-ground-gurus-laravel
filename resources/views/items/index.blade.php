@@ -18,7 +18,7 @@
                     <th>SKU</th>
                     <th>Reorder Level</th>
                     <th>Total Stocks</th>
-                    <th>Actions</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -29,19 +29,40 @@
                         <td>{{ $item['sku'] }}</td>
                         <td>{{ $item['reorder_level'] }}</td>
                         <td>{{ $item['total_stock'] }}</td>
-                        <td>
-                            <a href="/items/{{ $item->id }}" class="btn btn-dash">
-                                Show</a>
-                            <a href="/items/{{ $item->id }}/edit" class="btn btn-dash">
-                                Edit</a>
-                            <form action="/items/{{ $item->id }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-dash">
-                                    Delete
-                                </button>
-                            </form>
-
+                        <td class="whitespace-nowrap text-right relative">
+                            @can('view', $item)
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-sm btn-dash">
+                                        Actions
+                                    </label>
+                                    <ul tabindex="0"
+                                        class="dropdown-content menu bg-base-100 rounded-box shadow z-50 w-48 absolute">
+                                        <li class="block w-full">
+                                            @can('view', $item)
+                                                <a href="/items/{{ $item->id }}" class="text-sm">
+                                                    Show</a>
+                                            @endcan
+                                        </li>
+                                        <li class="block w-full">
+                                            @can('update', $item)
+                                                <a href="/items/{{ $item->id }}/edit" class="text-sm">
+                                                    Edit</a>
+                                            @endcan
+                                        </li>
+                                        <li class="block w-full">
+                                            @can('delete', $item)
+                                                <form action="/items/{{ $item->id }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-sm block w-full text-left">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach
