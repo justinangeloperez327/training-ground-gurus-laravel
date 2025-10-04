@@ -13,10 +13,10 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        $warehouses = Warehouse::all();
+        $paginatedWarehouses = Warehouse::with('user')->paginate(5);
 
         return view('warehouses.index', [
-            'warehouses' => $warehouses
+            'paginatedWarehouses' => $paginatedWarehouses
         ]);
     }
 
@@ -48,6 +48,8 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse)
     {
+        $warehouse->load('user');
+
         return view('warehouses.show', [
             'warehouse' => $warehouse
         ]);

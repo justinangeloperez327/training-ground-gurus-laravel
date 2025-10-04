@@ -16,15 +16,17 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Location</th>
+                    <th>Created By</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($warehouses as $warehouse)
+                @foreach ($paginatedWarehouses->items() as $warehouse)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $warehouse['name'] }}</td>
-                        <td>{{ $warehouse['location'] }}</td>
+                        <td>{{ $warehouse->id }}</td>
+                        <td>{{ $warehouse->name }}</td>
+                        <td>{{ $warehouse->location }}</td>
+                        <td>{{ $warehouse->user->name }}</td>
                         <td>
                             <a href="/warehouses/{{ $warehouse->id }}" class="btn btn-dash">
                                 Show</a>
@@ -43,5 +45,8 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+    <div class="flex justify-center  mt-2">
+        {{ $paginatedWarehouses->onEachSide(5)->links('vendor.pagination.sample') }}
     </div>
 </x-item-layout>

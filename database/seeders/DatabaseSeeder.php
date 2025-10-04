@@ -14,13 +14,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@laravel.com',
             'password' => Hash::make('admin'),
             'role' => 'admin',
+        ]);
+
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@laravel.com',
+            'password' => Hash::make('user'),
+            'role' => 'customer',
+        ]);
+
+        $this->call([
+            ItemsSeeder::class,
+            WarehousesSeeder::class
         ]);
     }
 }

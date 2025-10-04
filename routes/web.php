@@ -3,15 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemController;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\Auth\AvatarController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Middleware\AdminMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +50,13 @@ Route::middleware('auth')->group(function() {
     // Short method using resource
     Route::resource('items', ItemController::class);
     Route::resource('warehouses', WarehouseController::class);
+
+    // Route::resource('stocks', StockController::class);
+    Route::get('stocks/{item}', [StockController::class, 'index'])->name('stocks.index');
+    Route::get('stocks/{item}/create', [StockController::class, 'create'])->name('stocks.create');
+    Route::post('stocks/{item}', [StockController::class, 'store'])->name('stocks.store');
+    Route::get('stocks/{stock}/edit', [StockController::class, 'edit'])->name('stocks.edit');
+    Route::put('stocks/{stock}', [StockController::class, 'update'])->name('stocks.update');
 });
 
 Route::view('admin', 'admin')->middleware('admin');

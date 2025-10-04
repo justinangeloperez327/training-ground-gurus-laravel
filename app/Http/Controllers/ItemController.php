@@ -7,27 +7,47 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 
 class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::query()
+        $search = $request->search;
 
-            ->orderBy('name')
-            ->get();
+        // sorting
+        $sort = $request->get('sort', 'id');
+        $direction = $request->get('direction', 'asc');
+        $reorder_level = $request->reorder_level;
 
-        // if (Auth::user()->role == 'admin') {
-        //     $items = Item::query()
-        //         ->orderBy('name')
-        //         ->get();
-        // }
+        $paginatedItems = Item::query()
+            ->with('user')
+            ->withSum('stocks as total_stocks', 'quantity')
+
+            ->when($search, function($query) use ($search) {
+                $query->whereAny([
+                    'name', 'sku', 'reorder_level'
+                ], 'LIKE', '%'.$search.'%');
+            })
+            ->when($sort === 'id' || $sort === 'reorder_level', function ($query) use ($sort, $direction) {
+                $query->orderBy($sort, $direction);
+            }, function ($query) use ($sort, $direction) {
+                $query->orderByRaw("LOWER({$sort}) {$direction}");
+            })
+            ->when($reorder_level, function ($query) use ($reorder_level) {
+                $query->where('reorder_level', '<=', $reorder_level);
+            })
+            ->paginate(10)
+            ->withQueryString();
 
         return view('items.index', [
-            'items' => $items
+            'paginatedItems' => $paginatedItems,
+            'sort' => $sort,
+            'direction' => $direction,
+            'reorder_level' => $reorder_level
         ]);
     }
 
@@ -55,6 +75,7 @@ class ItemController extends Controller
             'reorder_level' => ['required', 'integer'],
         ]);
 
+
         // old way
         // $item = new Item();
         // $item->name = $validated['name'];
@@ -77,6 +98,12 @@ class ItemController extends Controller
         // easy way
         // Auth::user()->items()->create($validated);
 
+        Cache::forget('items_count');
+
+        Cache::rememberForever('items_count', function () {
+            return Item::count();
+        });
+
         return redirect('/items')->with('success', 'Item created');
     }
 
@@ -86,6 +113,7 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         Gate::authorize('view', $item);
+        $item->load('user');
 
         return view('items.show', [
             'item' => $item
@@ -127,6 +155,12 @@ class ItemController extends Controller
         //fancy way
         $item->update($validated);
 
+        Cache::forget('items_count');
+
+        Cache::rememberForever('items_count', function () {
+            return Item::count();
+        });
+
         return redirect('/items')->with('success', 'Item updated');
     }
 
@@ -138,6 +172,12 @@ class ItemController extends Controller
         Gate::authorize('delete', $item);
 
         $item->delete();
+
+        Cache::forget('items_count');
+
+        Cache::rememberForever('items_count', function () {
+            return Item::count();
+        });
 
         return redirect('/items')->with('success', 'Item deleted');
     }

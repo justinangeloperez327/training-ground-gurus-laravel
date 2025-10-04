@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Item extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'sku',
@@ -29,5 +33,10 @@ class Item extends Model
     public function image(): MorphOne
     {
         return $this->morphOne(Image::class, 'imageable')->where('is_primary', true);
+    }
+
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class);
     }
 }

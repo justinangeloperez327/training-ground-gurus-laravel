@@ -14,7 +14,8 @@
             <div class="card-body">
                 <p class="mb-2 font-semibold">ID: {{ $warehouse->id }}</p>
                 <p class="mb-2 font-semibold">Name: {{ $warehouse->name }}</p>
-                <p class="mb-2 font-semibold">SKU: {{ $warehouse->sku }}</p>
+                <p class="mb-2 font-semibold">Location: {{ $warehouse->location }}</p>
+                <p class="mb-2 font-semibold">Created By: {{ $warehouse->user->name }}</p>
             </div>
         </div>
     </div>

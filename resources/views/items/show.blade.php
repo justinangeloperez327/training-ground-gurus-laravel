@@ -15,6 +15,7 @@
             <p class="mb-2 font-semibold">Name: {{ $item->name }}</p>
             <p class="mb-2 font-semibold">SKU: {{ $item->sku }}</p>
             <p class="mb-2 font-semibold">Reorder Level: {{ $item->reorder_level }}</p>
+            <p class="mb-2 font-semibold">Created By: {{ $item->user->name }}</p>
         </div>
     </div>
 </x-item-layout>
