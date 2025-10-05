@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class ItemController extends Controller
 {
@@ -26,9 +25,9 @@ class ItemController extends Controller
         $paginatedItems = Item::query()
             ->with('user')
             ->withSum('stocks as total_stocks', 'quantity')
-            ->when($search, function($query) use ($search): void {
+            ->when($search, function ($query) use ($search): void {
                 $query->whereAny([
-                    'name', 'sku', 'reorder_level'
+                    'name', 'sku', 'reorder_level',
                 ], 'LIKE', '%'.$search.'%');
             })
             ->when($sort === 'id' || $sort === 'reorder_level', function ($query) use ($sort, $direction): void {
@@ -46,7 +45,7 @@ class ItemController extends Controller
             'paginatedItems' => $paginatedItems,
             'sort' => $sort,
             'direction' => $direction,
-            'reorder_level' => $reorder_level
+            'reorder_level' => $reorder_level,
         ]);
     }
 
@@ -73,7 +72,6 @@ class ItemController extends Controller
             'sku' => ['nullable', 'string', 'max:255'],
             'reorder_level' => ['required', 'integer'],
         ]);
-
 
         // old way
         // $item = new Item();
@@ -115,7 +113,7 @@ class ItemController extends Controller
         $item->load('user');
 
         return view('items.show', [
-            'item' => $item
+            'item' => $item,
         ]);
     }
 
@@ -127,7 +125,7 @@ class ItemController extends Controller
         Gate::authorize('update', $item);
 
         return view('items.edit', [
-            'item' => $item
+            'item' => $item,
         ]);
     }
 
@@ -138,7 +136,7 @@ class ItemController extends Controller
     {
         Gate::authorize('update', $item);
 
-        //validation
+        // validation
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'sku' => ['nullable', 'string', 'max:255'],
@@ -151,7 +149,7 @@ class ItemController extends Controller
         // $item->reorder_level = $validated['reorder_level'];
         // $item->save();
 
-        //fancy way
+        // fancy way
         $item->update($validated);
 
         Cache::forget('items_count');
