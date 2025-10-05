@@ -14,7 +14,7 @@ class Stock extends Model
     protected $fillable = [
         'item_id',
         'warehouse_id',
-        'quantity'
+        'quantity',
     ];
 
     public function item(): BelongsTo

@@ -1,20 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ItemController;
-use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\StockController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\AvatarController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockMovementController;
+use App\Http\Controllers\WarehouseController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,7 +36,7 @@ Route::middleware('guest')->group(function () {
 
 Route::post('logout', LogoutController::class)->name('sign-out')->middleware('auth');
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
 
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -75,6 +73,6 @@ Route::view('admin', 'admin')->middleware('admin');
 // Route::put('items/{item}', [ItemController::class, 'update']);
 // Route::delete('items/{item}', [ItemController::class, 'destroy']);
 
-//Limit what is available on controller
+// Limit what is available on controller
 // Route::resource('warehouses', WarehouseController::class)->only(['update']);
 // Route::resource('warehouses', WarehouseController::class)->except(['index', 'create', 'edit', 'show']);

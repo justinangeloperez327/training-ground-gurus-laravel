@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id(); //biginteger // primary key // auto increment
+            $table->id(); // biginteger // primary key // auto increment
             $table->string('name')->unique();
             $table->string('sku')->unique()->nullable();
             $table->integer('reorder_level')->default(0);

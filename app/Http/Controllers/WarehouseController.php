@@ -16,7 +16,7 @@ class WarehouseController extends Controller
         $paginatedWarehouses = Warehouse::with('user')->paginate(5);
 
         return view('warehouses.index', [
-            'paginatedWarehouses' => $paginatedWarehouses
+            'paginatedWarehouses' => $paginatedWarehouses,
         ]);
     }
 
@@ -35,10 +35,10 @@ class WarehouseController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:200'],
-            'location' => ['required', 'string', 'max:200']
+            'location' => ['required', 'string', 'max:200'],
         ]);
 
-        Warehouse::create(['user_id' => Auth::id(),...$validated]);
+        Warehouse::create(['user_id' => Auth::id(), ...$validated]);
 
         return redirect('warehouses')->with('success', 'Warehouse Created');
     }
@@ -51,7 +51,7 @@ class WarehouseController extends Controller
         $warehouse->load('user');
 
         return view('warehouses.show', [
-            'warehouse' => $warehouse
+            'warehouse' => $warehouse,
         ]);
     }
 
@@ -61,7 +61,7 @@ class WarehouseController extends Controller
     public function edit(Warehouse $warehouse)
     {
         return view('warehouses.edit', [
-            'warehouse' => $warehouse
+            'warehouse' => $warehouse,
         ]);
     }
 
@@ -72,7 +72,7 @@ class WarehouseController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:200'],
-            'location' => ['required', 'string', 'max:200']
+            'location' => ['required', 'string', 'max:200'],
         ]);
 
         $warehouse->update($validated);

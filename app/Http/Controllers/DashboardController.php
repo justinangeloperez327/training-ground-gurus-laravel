@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Warehouse;
-use App\Models\CustomerUser;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
@@ -29,7 +26,7 @@ class DashboardController extends Controller
         return view('dashboard', [
             'totalItems' => $totalItems,
             'totalWarehouses' => $totalWarehouses,
-            'lowStockItems' => $lowStockItems
+            'lowStockItems' => $lowStockItems,
         ]);
     }
 }

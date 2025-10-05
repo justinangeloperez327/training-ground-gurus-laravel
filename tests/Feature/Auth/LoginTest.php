@@ -1,41 +1,42 @@
 <?php
 
 use App\Models\User;
-use function Pest\Laravel\get;
-use function Pest\Laravel\post;
 use Illuminate\Support\Facades\Hash;
 
-it('displays login page', function (){
+use function Pest\Laravel\get;
+use function Pest\Laravel\post;
+
+it('displays login page', function () {
     get('/login')
-    ->assertOk()
-    ->assertSeeText("Welcome Back");
+        ->assertOk()
+        ->assertSeeText('Welcome Back');
 });
 
 it('logins the user', function () {
     User::factory()->create([
         'name' => 'Justin',
         'email' => 'justin@gmail.com',
-        'password' => Hash::make('justinjustin')
+        'password' => Hash::make('justinjustin'),
     ]);
 
     post('login', [
         'email' => 'justin@gmail.com',
-        'password' => "justinjustin"
+        'password' => 'justinjustin',
     ])
-    ->assertRedirect('/dashboard')
-    ->assertSessionHas('success');
+        ->assertRedirect('/dashboard')
+        ->assertSessionHas('success');
 });
 
 it('does not logins the user', function () {
     User::factory()->create([
         'name' => 'Justin',
         'email' => 'justin@gmail.com',
-        'password' => Hash::make('justinjustin')
+        'password' => Hash::make('justinjustin'),
     ]);
 
     post('login', [
         'email' => 'justin@gmail.com',
-        'password' => "justin"
+        'password' => 'justin',
     ])
-    ->assertRedirectBackWithErrors('email');
+        ->assertRedirectBackWithErrors('email');
 });

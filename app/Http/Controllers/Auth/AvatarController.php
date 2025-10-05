@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\Image;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +13,7 @@ class AvatarController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'avatar' => ['required', 'image', 'mimes:jpg, jpeg, png, webp', 'max:2048']
+            'avatar' => ['required', 'image', 'mimes:jpg, jpeg, png, webp', 'max:2048'],
         ]);
 
         $avatar = $request->file('avatar');
@@ -41,7 +41,7 @@ class AvatarController extends Controller
     public function update(Request $request, Image $image)
     {
         $request->validate([
-            'avatar' => ['required', 'image', 'mimes:jpg, jpeg, png, pneg, webp', 'max:2048']
+            'avatar' => ['required', 'image', 'mimes:jpg, jpeg, png, pneg, webp', 'max:2048'],
         ]);
 
         $avatar = $request->file('avatar');

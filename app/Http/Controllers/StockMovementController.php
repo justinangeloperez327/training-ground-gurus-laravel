@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stock;
+use App\Models\StockMovement;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
-use App\Models\StockMovement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +19,7 @@ class StockMovementController extends Controller
         $stockMovements = StockMovement::with(['warehouse', 'item', 'user'])->latest()->get();
 
         return view('stock-movements.index', [
-            'stockMovements' => $stockMovements
+            'stockMovements' => $stockMovements,
         ]);
     }
 
@@ -32,7 +32,7 @@ class StockMovementController extends Controller
 
         return view('stock-movements.create', [
             'stock' => $stock,
-            'warehouses' => $warehouses
+            'warehouses' => $warehouses,
         ]);
     }
 
@@ -43,18 +43,18 @@ class StockMovementController extends Controller
     {
         $validated = $request->validate([
             'warehouse_id' => ['integer', 'exists:warehouses,id', 'required'],
-            'quantity' => ['integer', 'required']
+            'quantity' => ['integer', 'required'],
         ]);
 
         if ($stock->quantity < $validated['quantity']) {
             return back()->withErrors([
-                'quantity' => "Insufficient stock in the current warehouse"
+                'quantity' => 'Insufficient stock in the current warehouse',
             ])->withInput();
         }
 
         $stock->load('item');
 
-        DB::transaction(function() use ($stock, $validated) {
+        DB::transaction(function () use ($stock, $validated) {
 
             $item = $stock->item;
 
@@ -66,7 +66,7 @@ class StockMovementController extends Controller
                 'warehouse_id' => $stock->warehouse_id,
                 'type' => 'transfer-out',
                 'quantity' => $validated['quantity'],
-                'created_by' => Auth::id()
+                'created_by' => Auth::id(),
             ]);
 
             // increase to the destination warehouse
@@ -77,7 +77,7 @@ class StockMovementController extends Controller
             } else {
                 $item->stocks()->create([
                     'warehouse_id' => $validated['warehouse_id'],
-                    'quantity' => $validated['quantity']
+                    'quantity' => $validated['quantity'],
                 ]);
             }
 
@@ -87,7 +87,7 @@ class StockMovementController extends Controller
                 'warehouse_id' => $stock->warehouse_id,
                 'type' => 'transfer-in',
                 'quantity' => $validated['quantity'],
-                'created_by' => Auth::id()
+                'created_by' => Auth::id(),
             ]);
         });
 

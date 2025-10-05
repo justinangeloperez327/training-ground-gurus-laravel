@@ -17,7 +17,7 @@ class Image extends Model
         'mime',
         'size',
         'alt',
-        'is_primary'
+        'is_primary',
     ];
 
     public function imageable()

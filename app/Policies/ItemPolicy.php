@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Item;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ItemPolicy
 {
@@ -61,6 +60,6 @@ class ItemPolicy
      */
     public function forceDelete(User $user, Item $item): bool
     {
-        return $item->user()->is($user)|| $user->role === 'admin';
+        return $item->user()->is($user) || $user->role === 'admin';
     }
 }

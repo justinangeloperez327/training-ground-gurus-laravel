@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
-use App\Models\Stock;
-use App\Models\Warehouse;
-use App\Models\StockMovement;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreStockRequest;
 use App\Http\Requests\UpdateStockRequest;
+use App\Models\Item;
+use App\Models\Stock;
+use App\Models\StockMovement;
+use App\Models\Warehouse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -36,9 +36,10 @@ class StockController extends Controller
         // $warehouses = Auth::user()->warehouses()->whereNotIn('id', $warehousesWithStocks);
 
         $warehouses = Warehouse::whereNotIn('id', $warehousesWithStocks)->where('user_id', Auth::id())->get();
+
         return view('stocks.create', [
             'item' => $item,
-            'warehouses' => $warehouses
+            'warehouses' => $warehouses,
         ]);
     }
 
@@ -57,7 +58,7 @@ class StockController extends Controller
                 'warehouse_id' => $validated['warehouse_id'],
                 'type' => 'add',
                 'quantity' => $validated['quantity'],
-                'created_by' => Auth::id()
+                'created_by' => Auth::id(),
             ]);
         });
 
@@ -70,7 +71,7 @@ class StockController extends Controller
     public function edit(Stock $stock)
     {
         return view('stocks.edit', [
-            'stock' => $stock
+            'stock' => $stock,
         ]);
     }
 
@@ -93,17 +94,17 @@ class StockController extends Controller
             $quantity = $stock->quantity - $validated['quantity'];
         }
 
-        DB::transaction(function() use ($stock, $quantity, $validated, $type) {
+        DB::transaction(function () use ($stock, $quantity, $validated, $type) {
             StockMovement::create([
                 'item_id' => $stock->item_id,
                 'warehouse_id' => $stock->warehouse_id,
                 'type' => $type,
                 'quantity' => $quantity,
-                'created_by' => Auth::id()
+                'created_by' => Auth::id(),
             ]);
 
             $stock->update([
-                'quantity' => $validated['quantity']
+                'quantity' => $validated['quantity'],
             ]);
         });
 

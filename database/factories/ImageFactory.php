@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Image;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Image>
@@ -30,7 +30,7 @@ class ImageFactory extends Factory
             'mime' => 'image/jpeg',
             'size' => fake()->numberBetween(50_000, 2_000_000),
             'alt' => fake()->sentence(),
-            'is_primary' => true
+            'is_primary' => true,
         ];
     }
 

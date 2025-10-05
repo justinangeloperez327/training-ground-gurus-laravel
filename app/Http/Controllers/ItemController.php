@@ -26,7 +26,6 @@ class ItemController extends Controller
         $paginatedItems = Item::query()
             ->with('user')
             ->withSum('stocks as total_stocks', 'quantity')
-
             ->when($search, function($query) use ($search) {
                 $query->whereAny([
                     'name', 'sku', 'reorder_level'

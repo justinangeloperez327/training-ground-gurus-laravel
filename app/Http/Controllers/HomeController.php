@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
     public function home()
@@ -11,7 +9,7 @@ class HomeController extends Controller
         $title = 'Inventory';
 
         return view('home', [
-            'title' => $title
+            'title' => $title,
         ]);
     }
 }
