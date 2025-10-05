@@ -23,6 +23,6 @@ class ProfileController extends Controller
         $request->user()->update($validated);
         // Auth::user()->update($validated);
 
-        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+        return redirect(route('profile'))->with('success', 'Profile updated successfully.');
     }
 }

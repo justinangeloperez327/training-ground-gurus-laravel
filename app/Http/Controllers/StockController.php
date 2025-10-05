@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Stock;
 use App\Models\Warehouse;
+use App\Models\StockMovement;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreStockRequest;
 use App\Http\Requests\UpdateStockRequest;
@@ -45,7 +47,19 @@ class StockController extends Controller
      */
     public function store(Item $item, StoreStockRequest $request)
     {
-        $item->stocks()->create($request->validated());
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($item, $validated) {
+            $item->stocks()->create($validated);
+
+            StockMovement::create([
+                'item_id' => $item->id,
+                'warehouse_id' => $validated['warehouse_id'],
+                'type' => 'add',
+                'quantity' => $validated['quantity'],
+                'created_by' => Auth::id()
+            ]);
+        });
 
         return redirect(route('stocks.index', $item->id))->with('success', 'Stocks Added');
     }
@@ -71,9 +85,27 @@ class StockController extends Controller
             return back()->with('info', 'No changes made to the stock quantiy');
         }
 
-        $stock->update([
-            'quantity' => $validated['quantity']
-        ]);
+        if ($stock->quantity < $validated['quantity']) {
+            $type = 'increase';
+            $quantity = $validated['quantity'] - $stock->quantity;
+        } else {
+            $type = 'decrease';
+            $quantity = $stock->quantity - $validated['quantity'];
+        }
+
+        DB::transaction(function() use ($stock, $quantity, $validated, $type) {
+            StockMovement::create([
+                'item_id' => $stock->item_id,
+                'warehouse_id' => $stock->warehouse_id,
+                'type' => $type,
+                'quantity' => $quantity,
+                'created_by' => Auth::id()
+            ]);
+
+            $stock->update([
+                'quantity' => $validated['quantity']
+            ]);
+        });
 
         return redirect(route('stocks.index', $stock->item->id))->with('success', 'Stocks Updated');
     }

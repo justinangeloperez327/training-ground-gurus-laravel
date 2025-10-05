@@ -16,6 +16,9 @@
                 <a href="{{ route('warehouses.index') }}" class="btn btn-ghost text-xl">
                     Warehouses
                 </a>
+                <a href="{{ route('stock-movements.index') }}" class="btn btn-ghost text-xl">
+                    Stock Movements
+                </a>
             @else
                 <a href="/about" class="btn btn-ghost text-xl">
                     About

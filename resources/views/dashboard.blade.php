@@ -28,7 +28,7 @@
                     Low stock Items
                 </span>
                 <span class="text-4xl font-bold mt-2">
-                    100
+                    {{ $lowStockItems }}
                 </span>
             </div>
         </div>

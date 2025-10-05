@@ -34,6 +34,10 @@
                                         <a href="{{ route('stocks.edit', $stock) }}" class="text-sm">
                                             Adjust</a>
                                     </li>
+                                    <li class="block w-full">
+                                        <a href="{{ route('stock-movements.create', $stock) }}" class="text-sm">
+                                            Transfer</a>
+                                    </li>
                                 </ul>
                             </div>
                         </td>

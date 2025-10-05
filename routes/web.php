@@ -14,13 +14,14 @@ use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\StockMovementController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 // Route::view('home', 'home');
-Route::redirect('/', 'home');
+// Route::redirect('/', 'home');
 
 // Route::view('about', 'about');
 
@@ -57,6 +58,10 @@ Route::middleware('auth')->group(function() {
     Route::post('stocks/{item}', [StockController::class, 'store'])->name('stocks.store');
     Route::get('stocks/{stock}/edit', [StockController::class, 'edit'])->name('stocks.edit');
     Route::put('stocks/{stock}', [StockController::class, 'update'])->name('stocks.update');
+
+    Route::get('stock-movements', [StockMovementController::class, 'index'])->name('stock-movements.index');
+    Route::get('stock-movements/{stock}', [StockMovementController::class, 'create'])->name('stock-movements.create');
+    Route::post('stock-movements/{stock}', [StockMovementController::class, 'store'])->name('stock-movements.store');
 });
 
 Route::view('admin', 'admin')->middleware('admin');
