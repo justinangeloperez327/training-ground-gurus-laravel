@@ -10,7 +10,7 @@ use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 use function Pest\Laravel\put;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create([
         'name' => 'Justin',
         'email' => 'justin@gmail.com',
@@ -21,13 +21,13 @@ beforeEach(function () {
     Storage::fake('public');
 });
 
-it('displays profile page', function () {
+it('displays profile page', function (): void {
     get('/profile')
         ->assertOk()
         ->assertSeeText('Profile');
 });
 
-it('updates user profile', function () {
+it('updates user profile', function (): void {
     put('/profile', [
         'name' => 'Angelo',
         'email' => 'angelo@gmail.com',
@@ -42,7 +42,7 @@ it('updates user profile', function () {
     ]);
 });
 
-it('uploads user profile avatar', function () {
+it('uploads user profile avatar', function (): void {
     $file = UploadedFile::fake()->image('profile.jpg', 100, 100);
 
     post('/avatar', [
@@ -54,7 +54,7 @@ it('uploads user profile avatar', function () {
     Storage::disk('public')->assertExists('uploads/avatars/'.$file->hashName());
 });
 
-it('updates user profile avatar', function () {
+it('updates user profile avatar', function (): void {
     $oldFile = UploadedFile::fake()->image('profile.jpg', 100, 100);
     $oldPath = $oldFile->store('uploads/avatars', 'public');
 

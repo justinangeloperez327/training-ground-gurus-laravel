@@ -26,17 +26,17 @@ class ItemController extends Controller
         $paginatedItems = Item::query()
             ->with('user')
             ->withSum('stocks as total_stocks', 'quantity')
-            ->when($search, function($query) use ($search) {
+            ->when($search, function($query) use ($search): void {
                 $query->whereAny([
                     'name', 'sku', 'reorder_level'
                 ], 'LIKE', '%'.$search.'%');
             })
-            ->when($sort === 'id' || $sort === 'reorder_level', function ($query) use ($sort, $direction) {
+            ->when($sort === 'id' || $sort === 'reorder_level', function ($query) use ($sort, $direction): void {
                 $query->orderBy($sort, $direction);
-            }, function ($query) use ($sort, $direction) {
+            }, function ($query) use ($sort, $direction): void {
                 $query->orderByRaw("LOWER({$sort}) {$direction}");
             })
-            ->when($reorder_level, function ($query) use ($reorder_level) {
+            ->when($reorder_level, function ($query) use ($reorder_level): void {
                 $query->where('reorder_level', '<=', $reorder_level);
             })
             ->paginate(10)

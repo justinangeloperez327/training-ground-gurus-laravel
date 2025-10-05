@@ -6,13 +6,13 @@ use App\Models\User;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->user = User::factory()->create();
 
     actingAs($this->user);
 });
 
-it('displays items', function () {
+it('displays items', function (): void {
     $items = Item::factory()->count(5)->create();
     $item = $items->first();
 

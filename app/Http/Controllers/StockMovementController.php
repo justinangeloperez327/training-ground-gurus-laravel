@@ -54,7 +54,7 @@ class StockMovementController extends Controller
 
         $stock->load('item');
 
-        DB::transaction(function () use ($stock, $validated) {
+        DB::transaction(function () use ($stock, $validated): void {
 
             $item = $stock->item;
 

@@ -50,7 +50,7 @@ class StockController extends Controller
     {
         $validated = $request->validated();
 
-        DB::transaction(function () use ($item, $validated) {
+        DB::transaction(function () use ($item, $validated): void {
             $item->stocks()->create($validated);
 
             StockMovement::create([
@@ -94,7 +94,7 @@ class StockController extends Controller
             $quantity = $stock->quantity - $validated['quantity'];
         }
 
-        DB::transaction(function () use ($stock, $quantity, $validated, $type) {
+        DB::transaction(function () use ($stock, $quantity, $validated, $type): void {
             StockMovement::create([
                 'item_id' => $stock->item_id,
                 'warehouse_id' => $stock->warehouse_id,

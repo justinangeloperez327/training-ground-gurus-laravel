@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 // Route::view('about', 'about');
 
-Route::middleware('guest')->group(function () {
+Route::middleware('guest')->group(function (): void {
     Route::view('login', 'auth.login');
     Route::view('register', 'auth.register');
 
@@ -36,7 +36,7 @@ Route::middleware('guest')->group(function () {
 
 Route::post('logout', LogoutController::class)->name('sign-out')->middleware('auth');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function (): void {
 
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');

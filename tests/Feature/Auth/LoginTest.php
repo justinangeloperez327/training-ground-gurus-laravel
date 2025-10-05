@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Hash;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
-it('displays login page', function () {
+it('displays login page', function (): void {
     get('/login')
         ->assertOk()
         ->assertSeeText('Welcome Back');
 });
 
-it('logins the user', function () {
+it('logins the user', function (): void {
     User::factory()->create([
         'name' => 'Justin',
         'email' => 'justin@gmail.com',
@@ -27,7 +27,7 @@ it('logins the user', function () {
         ->assertSessionHas('success');
 });
 
-it('does not logins the user', function () {
+it('does not logins the user', function (): void {
     User::factory()->create([
         'name' => 'Justin',
         'email' => 'justin@gmail.com',
